@@ -6,6 +6,7 @@ from datetime import datetime
 
 class BaseModel:
     """A base class for all hbnb models"""
+
     def __init__(self, *args, **kwargs):
         """Instatntiates a new model"""
         if not kwargs:
@@ -15,12 +16,31 @@ class BaseModel:
             self.updated_at = datetime.now()
             storage.new(self)
         else:
-            kwargs['updated_at'] = datetime.strptime(kwargs['updated_at'],
-                                                     '%Y-%m-%dT%H:%M:%S.%f')
-            kwargs['created_at'] = datetime.strptime(kwargs['created_at'],
-                                                     '%Y-%m-%dT%H:%M:%S.%f')
-            del kwargs['__class__']
-            self.__dict__.update(kwargs)
+            DATE_TIME_FORMAT = '%Y-%m-%dT%H:%M:%S.%f'
+            for key, value in kwargs.items():
+                if key != "__class__":
+                    setattr(self, key, value)
+
+            if kwargs.get("created_at") and type(self.created_at) is str:
+                self.created_at = datetime.strptime(
+                    kwargs["created_at"], DATE_TIME_FORMAT)
+            else:
+                self.created_at = datetime.utcnow()
+
+            if kwargs.get("updated_at") and type(self.updated_at) is str:
+                self.updated_at = datetime.strptime(
+                    kwargs["updated_at"], DATE_TIME_FORMAT)
+            else:
+                self.updated_at = datetime.utcnow()
+
+            if kwargs.get("id") is None:
+                self.id = str(uuid.uuid4())
+            # kwargs['updated_at'] = datetime.strptime(kwargs['updated_at'],
+            #                                          '%Y-%m-%dT%H:%M:%S.%f')
+            # kwargs['created_at'] = datetime.strptime(kwargs['created_at'],
+            #                                          '%Y-%m-%dT%H:%M:%S.%f')
+            # del kwargs['__class__']
+            # self.__dict__.update(kwargs)
 
     def __str__(self):
         """Returns a string representation of the instance"""
@@ -37,8 +57,7 @@ class BaseModel:
         """Convert instance into dict format"""
         dictionary = {}
         dictionary.update(self.__dict__)
-        dictionary.update({'__class__':
-                          (str(type(self)).split('.')[-1]).split('\'')[0]})
+        dictionary.update({'__class__': self.__class__.__name__})
         dictionary['created_at'] = self.created_at.isoformat()
         dictionary['updated_at'] = self.updated_at.isoformat()
         return dictionary
