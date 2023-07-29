@@ -53,14 +53,14 @@ class DBStorage:
         if cls is not None:
             obj_dict = self.__session.query(cls).all()
         else:
-            obj_dict = self.__session.query(User.all())
-            obj_dict.extend(self.__session.query(State).all())
+            obj_dict = self.__session.query(State).all()
             obj_dict.extend(self.__session.query(City).all())
-            obj_dict.extend(self.__session.query(Amenity).all())
-            obj_dict.extend(self.__session.query(Place).all())
-            obj_dict.extend(self.__session.query(Review).all())
+            # obj_dict.extend(self.__session.query(User).all())
+            # obj_dict.extend(self.__session.query(Amenity).all())
+            # obj_dict.extend(self.__session.query(Place).all())
+            # obj_dict.extend(self.__session.query(Review).all())
 
-        return {"{}.{}".format(obj.__name__, obj.id):
+        return {"{}.{}".format(obj.__class__.__name__, obj.id):
                 obj for obj in obj_dict}
 
     def new(self, obj):
@@ -80,7 +80,7 @@ class DBStorage:
 
     def delete(self, obj=None):
         """
-        Delete obj from the current database session obj if not None.
+        Delete obj from the current database session if obj is not None.
         """
         if obj is not None:
             self.__session.delete(obj)
