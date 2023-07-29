@@ -18,7 +18,7 @@ class City(BaseModel, Base):
     Attributes:
         __tablename__ (str): The name of the MySQL table to store Cities.
         name (sqlalchemy String): The name of the City.
-        state_id (sqlalchemy String): The state id of the City.
+        state_id (sqlalchemy String): The state id of in which City is located.
         places (sqlalchemy relationship): City-Place relationship.
     """
 

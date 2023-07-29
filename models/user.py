@@ -18,6 +18,7 @@ class User(BaseModel, Base):
         first_name (sqlalchemy String): The first name of user.
         last_name (sqlalchemy String): The last name of user.
         places (sqlalchemy relationship): User-Place relationship.
+        reviews (sqlalchemy relationship): User-Review relationship.
     """
     __tablename__ = 'users'
 
@@ -26,3 +27,4 @@ class User(BaseModel, Base):
     first_name = Column(String(128))
     last_name = Column(String(128))
     places = relationship("Place", backref="user", cascade="all, delete")
+    reviews = relationship("Review", backref="user", cascade="all, delete")

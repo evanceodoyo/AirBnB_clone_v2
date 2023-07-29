@@ -1,5 +1,7 @@
 #!/usr/bin/python3
 """ Place Module for HBNB project """
+from os import getenv
+import models
 from models.base_model import Base
 from models.base_model import BaseModel
 from sqlalchemy import Column
@@ -7,6 +9,8 @@ from sqlalchemy import String
 from sqlalchemy import Integer
 from sqlalchemy import Float
 from sqlalchemy import ForeignKey
+from sqlalchemy.orm import relationship
+from models.review import Review
 
 
 class Place(BaseModel, Base):
@@ -25,6 +29,7 @@ class Place(BaseModel, Base):
         price_by_night (sqlalchemy Integer): Price by night.
         latitude (sqlalchemy Float): location (latitude)
         longitude (sqlalchemy Float) location (longitude)
+        reviews (sqlalchemy relationship): Place-Review relationship.
         amenity_ids (list): List of ids to all linked amenities.
     """
     __tablename__ = 'places'
@@ -39,4 +44,19 @@ class Place(BaseModel, Base):
     price_by_night = Column(Integer, nullable=False, default=0)
     latitude = Column(Float)
     longitude = Column(Float)
+    reviews = relationship("Review", backref="place", cascade="all, delete")
     amenity_ids = []
+
+    if getenv("HBNB_TYPE_STORAGE") != "db":
+        @property
+        def reviews(self):
+            """
+            Retruns the list of Review instances with `place_id` equals to the
+            current `place.id`. i.e FileStorage relationship between
+            `Place` and `Review`.
+            """
+            review_list = []
+            for review in list(models.storage.all(Review).values()):
+                if review.place_id == self.id:
+                    review_list.append(review)
+            return review_list
