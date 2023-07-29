@@ -56,8 +56,8 @@ class DBStorage:
             obj_dict = self.__session.query(State).all()
             obj_dict.extend(self.__session.query(City).all())
             obj_dict.extend(self.__session.query(User).all())
+            obj_dict.extend(self.__session.query(Place).all())
             # obj_dict.extend(self.__session.query(Amenity).all())
-            # obj_dict.extend(self.__session.query(Place).all())
             # obj_dict.extend(self.__session.query(Review).all())
 
         return {"{}.{}".format(obj.__class__.__name__, obj.id):
