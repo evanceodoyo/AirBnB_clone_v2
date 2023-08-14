@@ -26,7 +26,7 @@ place_amenity = Table("place_amenity", Base.metadata,
 
 class Place(BaseModel, Base):
     """
-    Defines a User.
+    Defines a Place.
 
     Attributes:
         __tablename__ (str): The name of the MySQL table to store Place.
