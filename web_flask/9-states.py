@@ -21,24 +21,23 @@ def teardown_db(exception):
     storage.close()
 
 
-@app.route("/states", strict_slashes=False)
-@app.route("/states/<id>", strict_slashes=False)
-def states(id=""):
+@app.route("/states")
+def states():
     """
     Renders html page with list of all State objects present in DBStorage.
+    """
+    states = storage.all(State).values()
+    return render_template("9-states.html", states=states)
+
+
+@app.route("/states/<id>")
+def states_id(id=""):
+    """
     If <id> is provided and exists, render html page with the State and \
     all its cities.
     """
-    states = []
-    states_objs = storage.all(State).values()
-
-    if id:
-        for state_obj in states_objs:
-            if id == state_obj.id:
-                states.append(state_obj)
-    else:
-        states.extend(states_objs)
-    return render_template("9-states.html", states=states)
+    states = storage.all(State).values()
+    return render_template("9-states.html", states=states, id=id)
 
 
 if __name__ == "__main__":
