@@ -29,8 +29,6 @@ def hbnb_filters():
     """
     states = storage.all(State).values()
     amenities = storage.all(Amenity).values()
-    for amenity in amenities:
-        print("Amenity: ", amenity)
     return render_template("10-hbnb_filters.html",
                            states=states, amenities=amenities)
 
