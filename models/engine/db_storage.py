@@ -100,4 +100,4 @@ class DBStorage:
         Closes the current session. Clears all items and ends any transaction \
         in progress.
         """
-        self.__session.remove()
+        self.__session.close()
